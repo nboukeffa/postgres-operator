@@ -323,7 +323,9 @@ func (c *Cluster) syncSecrets() error {
 }
 
 func (c *Cluster) syncSecret(secretUsername string, secretSpec *v1.Secret, secretNamespace string) error {
+	secretSpec.Namespace = secretNamespace
 	secret, err := c.KubeClient.Secrets(secretNamespace).Create(secretSpec)
+
 	if k8sutil.ResourceAlreadyExists(err) {
 		var userMap map[string]spec.PgUser
 		curSecret, err2 := c.KubeClient.Secrets(secretNamespace).Get(secretSpec.Name, metav1.GetOptions{})
